@@ -1,19 +1,8 @@
 import * as yup from 'yup';
 import view from './view.js';
 
-export default (i18n) => {
-  const state = {
-    form: {
-      isValid: null,
-      message: '',
-    },
-    links: [],
-  };
-  const elements = {
-    form: document.querySelector('.rss-form'),
-  };
-
-  const watcher = view(state, elements);
+export default (i18n, state, elements) => {
+  const watcher = view(i18n, state, elements);
 
   elements.form.addEventListener('submit', (e) => {
     e.preventDefault();
@@ -27,13 +16,13 @@ export default (i18n) => {
 
     schema.validate(url)
       .then((result) => {
-        watcher.form.isValid = true;
-        watcher.form.message = 'success';
+        watcher.form.error = 'success';
         watcher.links.push(result);
+        watcher.form.isValid = true;
       })
-      .catch((error) => {
+      .catch((err) => {
+        watcher.form.error = err.message;
         watcher.form.isValid = false;
-        watcher.form.message = error.message;
       });
   });
 };
