@@ -1,6 +1,6 @@
 import i18next from 'i18next';
 import ru from './locales/ru.js';
-import runApp from './app.js';
+import runApp from './controller.js';
 
 export default () => {
   const i18n = i18next.createInstance();
@@ -18,11 +18,21 @@ export default () => {
           isValid: null,
           error: '',
         },
+
         links: [],
+
+        content: {
+          feeds: [],
+          posts: [],
+        },
       };
       const elements = {
         form: document.querySelector('.rss-form'),
         feedback: document.querySelector('.feedback'),
+
+        feeds: document.querySelector('.feeds'),
+        posts: document.querySelector('.posts'),
+        modal: document.querySelector('#modal'),
       };
 
       runApp(i18n, state, elements);
