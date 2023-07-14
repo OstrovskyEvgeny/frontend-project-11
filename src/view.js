@@ -1,5 +1,5 @@
 import onChange from 'on-change';
-import { generateContent, generateFeedsList, generatePostsList } from './generateLists.js';
+import { generateContent, generateFeedsList, generatePostsList } from './generateDOM.js';
 
 export default (i18n, state, elements) => {
   const watcher = onChange(state, (path, value) => {
@@ -37,6 +37,25 @@ export default (i18n, state, elements) => {
 
       feedsContainerEl.replaceChildren(feedsContent);
       postsContainerEl.replaceChildren(postsContent);
+    }
+
+    if (path === 'modalActive') {
+      const { post, modal, visitedLinkEl } = value;
+
+      const modalTitle = modal.querySelector('.modal-title');
+      const modalBody = modal.querySelector('.modal-body');
+      const modalFooterLink = modal.querySelector('.modal-footer > a');
+
+      const {
+        title, description, link,
+      } = post;
+
+      modalTitle.textContent = title;
+      modalBody.textContent = description;
+      modalFooterLink.setAttribute('href', link);
+
+      visitedLinkEl.classList.remove('fw-bold');
+      visitedLinkEl.classList.add('link-secondary', 'fw-normal');
     }
   });
 

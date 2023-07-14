@@ -20,6 +20,7 @@ export default () => {
         },
 
         links: [],
+        modalActive: null,
 
         content: {
           feeds: [],

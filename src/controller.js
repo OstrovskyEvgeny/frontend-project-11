@@ -1,6 +1,7 @@
 import * as yup from 'yup';
 import view from './view.js';
-import checkTheResourceForRssContent from './parser.js';
+import rssCheckController from './rssCheckController.js';
+import handlerModal from './handlerModal.js';
 
 export default (i18n, state, elements) => {
   const watcher = view(i18n, state, elements);
@@ -17,23 +18,8 @@ export default (i18n, state, elements) => {
 
     schema.validate(url)
       .then((result) => {
-        checkTheResourceForRssContent(result, state, watcher);
-
-        const { modal } = elements;
-        modal.addEventListener('show.bs.modal', (event) => {
-          const button = event.relatedTarget;
-          const recipient = button.dataset.id;
-          const modalTitle = modal.querySelector('.modal-title');
-          const modalBody = modal.querySelector('.modal-body');
-          const modalFooterLink = modal.querySelector('.modal-footer > a');
-          const {
-            title, description, link,
-          } = state.content.posts.find(({ idPost }) => idPost === recipient);
-
-          modalTitle.textContent = title;
-          modalBody.textContent = description;
-          modalFooterLink.setAttribute('href', link);
-        });
+        rssCheckController(result, state, watcher);
+        handlerModal(state, elements, watcher);
       })
       .catch((err) => {
         const form = {
