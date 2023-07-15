@@ -21,6 +21,7 @@ export default (xml) => {
     const pubDateEl = itemEl.querySelector('pubDate');
     const date = new Date(pubDateEl.textContent);
     return {
+      vived: false,
       idFeed,
       idPost: uniqueId(),
       title: titleEl.textContent,

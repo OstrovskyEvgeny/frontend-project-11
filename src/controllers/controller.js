@@ -1,5 +1,5 @@
 import * as yup from 'yup';
-import view from './view.js';
+import view from '../view.js';
 import rssCheckController from './rssCheckController.js';
 import handlerModal from './handlerModal.js';
 
@@ -19,6 +19,7 @@ export default (i18n, state, elements) => {
     schema.validate(url)
       .then((result) => {
         rssCheckController(result, state, watcher);
+
         handlerModal(state, elements, watcher);
       })
       .catch((err) => {

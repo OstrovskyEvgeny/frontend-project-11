@@ -1,8 +1,8 @@
 import axios from 'axios';
-import parser from './parser.js';
+import parser from '../parser.js';
 import newPostsCheck from './newPostsCheckController.js';
 
-export const getProxyUrl = (url) => `https://allorigins.hexlet.app/get?disableCache=true&url=${encodeURIComponent(url)}`;
+const getProxyUrl = (url) => `https://allorigins.hexlet.app/get?disableCache=true&url=${encodeURIComponent(url)}`;
 
 export default (url, state, watchedState) => {
   const watcher = watchedState;

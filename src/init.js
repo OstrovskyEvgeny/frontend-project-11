@@ -1,6 +1,6 @@
 import i18next from 'i18next';
 import ru from './locales/ru.js';
-import runApp from './controller.js';
+import runApp from './controllers/controller.js';
 
 export default () => {
   const i18n = i18next.createInstance();
@@ -33,7 +33,11 @@ export default () => {
 
         feeds: document.querySelector('.feeds'),
         posts: document.querySelector('.posts'),
+
         modal: document.querySelector('#modal'),
+        modalTitle: document.querySelector('.modal-title'),
+        modalBody: document.querySelector('.modal-body'),
+        modalFooterLink: document.querySelector('.modal-footer > a'),
       };
 
       runApp(i18n, state, elements);

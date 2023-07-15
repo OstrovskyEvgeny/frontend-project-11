@@ -45,14 +45,18 @@ export const generateFeedsList = (feedsColl) => {
 export const generatePostsList = (postsColl, i18n) => {
   const list = postsColl.map((postObj) => {
     const {
-      link, idPost, title,
+      link, idPost, title, vived,
     } = postObj;
 
     const liPostEl = document.createElement('li');
     liPostEl.classList.add('list-group-item', 'd-flex', 'justify-content-between', 'align-items-start', 'border-0', 'border-end-0');
 
     const linkPostEl = document.createElement('a');
-    linkPostEl.classList.add('fw-bold');
+    if (vived) {
+      linkPostEl.classList.add('link-secondary', 'fw-normal');
+    } else {
+      linkPostEl.classList.add('fw-bold');
+    }
     linkPostEl.setAttribute('href', link);
     linkPostEl.setAttribute('data-id', idPost);
     linkPostEl.setAttribute('arget', '_blank');
