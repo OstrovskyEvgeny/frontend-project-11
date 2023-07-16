@@ -1,5 +1,5 @@
 import axios from 'axios';
-import parser from '../parser.js';
+import parser from './parser.js';
 
 const newPostsCheck = (proxyUrl, state, watchedState) => {
   axios.get(proxyUrl)

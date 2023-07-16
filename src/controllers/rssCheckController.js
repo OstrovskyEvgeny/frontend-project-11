@@ -1,5 +1,5 @@
 import axios from 'axios';
-import parser from '../parser.js';
+import parser from './parser.js';
 import newPostsCheck from './newPostsCheckController.js';
 
 const getProxyUrl = (url) => `https://allorigins.hexlet.app/get?disableCache=true&url=${encodeURIComponent(url)}`;

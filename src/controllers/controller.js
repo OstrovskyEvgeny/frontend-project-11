@@ -1,5 +1,5 @@
 import * as yup from 'yup';
-import view from '../view.js';
+import view from '../view/view.js';
 import rssCheckController from './rssCheckController.js';
 import handlerModal from './handlerModal.js';
 
