@@ -1,10 +1,8 @@
 import uniqueId from 'lodash/uniqueId.js';
 
-export default (xml) => {
-  const parser = new DOMParser();
-  const rssContentEl = parser.parseFromString(xml, 'application/xml');
-  const titleFeedEl = rssContentEl.querySelector('channel > title');
-  const descriptionFeedEl = rssContentEl.querySelector('channel > description');
+export default (rssEl) => {
+  const titleFeedEl = rssEl.querySelector('channel > title');
+  const descriptionFeedEl = rssEl.querySelector('channel > description');
   const idFeed = uniqueId();
 
   const newFeed = {
@@ -12,7 +10,8 @@ export default (xml) => {
     title: titleFeedEl.textContent,
     description: descriptionFeedEl.textContent,
   };
-  const itemsEl = rssContentEl.querySelectorAll('channel > item');
+
+  const itemsEl = rssEl.querySelectorAll('channel > item');
 
   const newPosts = [...itemsEl].map((itemEl) => {
     const titleEl = itemEl.querySelector('title');
@@ -20,6 +19,7 @@ export default (xml) => {
     const descriptionEl = itemEl.querySelector('description');
     const pubDateEl = itemEl.querySelector('pubDate');
     const date = new Date(pubDateEl.textContent);
+
     return {
       vived: false,
       idFeed,

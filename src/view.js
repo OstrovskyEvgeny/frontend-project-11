@@ -1,4 +1,3 @@
-/* eslint-disable no-param-reassign */
 import onChange from 'on-change';
 import { generateContent, generateFeedsList, generatePostsList } from './generateDOM.js';
 
@@ -43,10 +42,11 @@ export default (i18n, state, elements) => {
     if (path === 'modalActive') {
       const { post, visitedLinkEl } = value;
       const { title, description, link } = post;
+      const { modalTitle, modalBody, modalFooterLink } = elements.modal;
 
-      elements.modalTitle.textContent = title;
-      elements.modalBody.textContent = description;
-      elements.modalFooterLink.setAttribute('href', link);
+      modalTitle.textContent = title;
+      modalBody.textContent = description;
+      modalFooterLink.setAttribute('href', link);
 
       visitedLinkEl.classList.remove('fw-bold');
       visitedLinkEl.classList.add('link-secondary', 'fw-normal');

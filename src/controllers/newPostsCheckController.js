@@ -1,5 +1,3 @@
-/* eslint-disable no-param-reassign */
-/* eslint-disable no-return-assign */
 import axios from 'axios';
 import parser from '../parser.js';
 
@@ -7,7 +5,9 @@ const newPostsCheck = (proxyUrl, state, watchedState) => {
   axios.get(proxyUrl)
     .then((response) => {
       const { data } = response;
-      const { newFeed, newPosts } = parser(data.contents);
+      const domParser = new DOMParser();
+      const rssEl = domParser.parseFromString(data.contents, 'application/xml');
+      const { newFeed, newPosts } = parser(rssEl);
 
       const { idFeed } = state.content.feeds
         .find(({ title }) => title === newFeed.title);
@@ -20,11 +20,15 @@ const newPostsCheck = (proxyUrl, state, watchedState) => {
         return;
       }
 
-      newlyAddedPosts.map((post) => post.idFeed = idFeed);
+      newlyAddedPosts.map((post) => {
+        const postObjLink = post;
+        postObjLink.idFeed = idFeed;
+        return postObjLink;
+      });
 
       const content = {
         feeds: state.content.feeds,
-        posts: [...state.content.posts, ...newlyAddedPosts],
+        posts: [...state.content.posts, ...newlyAddedPosts].sort((a, b) => b.date - a.date),
       };
 
       const watcher = watchedState;
@@ -33,7 +37,7 @@ const newPostsCheck = (proxyUrl, state, watchedState) => {
       setTimeout(() => newPostsCheck(proxyUrl, state, watchedState), 5000);
     })
     .catch((e) => {
-      console.log('Ошибка get запроса для проверки обновления постов', e);
+      console.log('Ошибка сети при обновлении постов', e);
       newPostsCheck(proxyUrl, state, watchedState);
     });
 };

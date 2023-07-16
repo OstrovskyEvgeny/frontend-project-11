@@ -11,7 +11,13 @@ export default (url, state, watchedState) => {
   axios.get(proxyUrl)
     .then((response) => {
       const { data } = response;
-      const { newFeed, newPosts } = parser(data.contents);
+      const domParser = new DOMParser();
+      const rssEl = domParser.parseFromString(data.contents, 'application/xml');
+
+      const parserError = rssEl.querySelector('parsererror');
+      if (parserError) throw new Error('errorNoRss');
+
+      const { newFeed, newPosts } = parser(rssEl);
       const oldFeeds = state.content.feeds;
       const oldPosts = state.content.posts;
 
@@ -31,13 +37,19 @@ export default (url, state, watchedState) => {
       setTimeout(() => newPostsCheck(proxyUrl, state, watchedState), 5000);
     })
     .catch((error) => {
-      const form = {
-        isValue: false,
-        error: 'errorNoRss',
-      };
-      watcher.form = form;
-
+      if (error.message === 'errorNoRss') {
+        const form = {
+          isValue: false,
+          error: error.message,
+        };
+        watcher.form = form;
+      }
       if (error.response) {
+        const form = {
+          isValue: false,
+          error: 'errorNetwork',
+        };
+        watcher.form = form;
         // The request was made and the server responded with a status code
         // that falls out of the range of 2xx
         console.log(error.response.data);
@@ -52,6 +64,5 @@ export default (url, state, watchedState) => {
         // Something happened in setting up the request that triggered an Error
         console.log('Error', error.message);
       }
-      // console.log(error.config);
     });
 };

@@ -11,6 +11,17 @@ export default (i18n, state, elements) => {
     const formData = new FormData(elements.form);
     const url = formData.get('url');
 
+    try {
+      if (url === '') throw new Error('errorFieldEmpty');
+    } catch (err) {
+      const form = {
+        isValid: false,
+        error: err.message,
+      };
+      watcher.form = form;
+      return;
+    }
+
     const schema = yup
       .string()
       .notOneOf(state.links, 'errorExist')

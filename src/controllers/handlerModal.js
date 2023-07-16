@@ -1,18 +1,12 @@
-/* eslint-disable no-param-reassign */
 export default (state, elements, watchedState) => {
-  const { modal } = elements;
+  const { modal } = elements.modal;
   modal.addEventListener('show.bs.modal', (event) => {
     const button = event.relatedTarget;
     const idButton = button.dataset.id;
 
     const post = state.content.posts
-      .reduce((accumulator, necessaryPost) => {
-        if (necessaryPost.idPost === idButton) {
-          necessaryPost.vived = true;
-          accumulator = necessaryPost;
-        }
-        return accumulator;
-      }, {});
+      .find((currentPost) => currentPost.idPost === idButton);
+    post.vived = true;
 
     const liEl = button.offsetParent;
     const visitedLinkEl = liEl.querySelector('a');

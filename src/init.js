@@ -18,14 +18,12 @@ export default () => {
           isValid: null,
           error: '',
         },
-
-        links: [],
-        modalActive: null,
-
         content: {
           feeds: [],
           posts: [],
         },
+        links: [],
+        modalActive: null,
       };
       const elements = {
         form: document.querySelector('.rss-form'),
@@ -34,10 +32,12 @@ export default () => {
         feeds: document.querySelector('.feeds'),
         posts: document.querySelector('.posts'),
 
-        modal: document.querySelector('#modal'),
-        modalTitle: document.querySelector('.modal-title'),
-        modalBody: document.querySelector('.modal-body'),
-        modalFooterLink: document.querySelector('.modal-footer > a'),
+        modal: {
+          modal: document.querySelector('#modal'),
+          modalTitle: document.querySelector('.modal-title'),
+          modalBody: document.querySelector('.modal-body'),
+          modalFooterLink: document.querySelector('.modal-footer > a'),
+        },
       };
 
       runApp(i18n, state, elements);
