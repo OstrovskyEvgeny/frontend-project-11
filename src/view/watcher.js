@@ -3,31 +3,34 @@ import { generateContent, generateFeedsList, generatePostsList } from './generat
 
 export default (i18n, state, elements) => {
   const watcher = onChange(state, (path, value) => {
-    const inputUrlEl = elements.form.elements.url;
-    const feedbackPEl = elements.feedback;
+    if (path === 'flowAdditionProcess.state') {
+      const inputUrlEl = elements.form.formEl.elements.url;
+      const feedbackPEl = elements.form.feedback;
 
-    if (path === 'form') {
-      const { isValid, error } = value;
-      if (isValid) {
+      if (value === 'sending') {
+        elements.form.submitBtn.setAttribute('disabled', 'disabled');
+      }
+      if (value === 'failed') {
+        feedbackPEl.classList.remove('text-success');
+        feedbackPEl.classList.add('text-danger');
+        inputUrlEl.classList.add('is-invalid');
+        feedbackPEl.textContent = i18n.t(state.flowAdditionProcess.error);
+        elements.form.submitBtn.removeAttribute('disabled');
+      }
+      if (value === 'finished') {
         inputUrlEl.classList.remove('is-invalid');
         inputUrlEl.value = '';
         inputUrlEl.focus();
-
         feedbackPEl.classList.remove('text-danger');
         feedbackPEl.classList.add('text-success');
         feedbackPEl.textContent = i18n.t('success');
-      } else {
-        inputUrlEl.classList.add('is-invalid');
-
-        feedbackPEl.classList.add('text-danger');
-        feedbackPEl.classList.remove('text-success');
-        feedbackPEl.textContent = i18n.t(error);
+        elements.form.submitBtn.removeAttribute('disabled');
       }
     }
 
     if (path === 'content') {
-      const feedsContainerEl = elements.feeds;
-      const postsContainerEl = elements.posts;
+      const feedsContainerEl = elements.content.feeds;
+      const postsContainerEl = elements.content.posts;
 
       const feedsListElColl = generateFeedsList(value.feeds);
       const postsListElColl = generatePostsList(value.posts, i18n);

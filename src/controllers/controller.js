@@ -1,44 +1,38 @@
 import * as yup from 'yup';
-import view from '../view/view.js';
 import rssCheckController from './rssCheckController.js';
 import handlerModal from './handlerModal.js';
 
-export default (i18n, state, elements) => {
-  const watcher = view(i18n, state, elements);
+export default (state, elements, watcher) => {
+  const watchedState = watcher;
 
-  elements.form.addEventListener('submit', (e) => {
+  elements.form.formEl.addEventListener('submit', (e) => {
     e.preventDefault();
-    const formData = new FormData(elements.form);
+    watchedState.flowAdditionProcess.state = 'sending';
+
+    const formData = new FormData(elements.form.formEl);
     const url = formData.get('url');
 
     try {
       if (url === '') throw new Error('errorFieldEmpty');
     } catch (err) {
-      const form = {
-        isValid: false,
-        error: err.message,
-      };
-      watcher.form = form;
+      watchedState.flowAdditionProcess.error = err.message;
+      watchedState.flowAdditionProcess.state = 'failed';
       return;
     }
 
     const schema = yup
       .string()
-      .notOneOf(state.links, 'errorExist')
+      .notOneOf(state.flowAdditionProcess.addedLinks, 'errorExist')
       .url('errorNoValid');
 
     schema.validate(url)
       .then((result) => {
         rssCheckController(result, state, watcher);
-
         handlerModal(state, elements, watcher);
       })
       .catch((err) => {
-        const form = {
-          isValid: false,
-          error: err.message,
-        };
-        watcher.form = form;
+        watchedState.flowAdditionProcess.error = err.message;
+        watchedState.flowAdditionProcess.state = 'failed';
       });
   });
 };

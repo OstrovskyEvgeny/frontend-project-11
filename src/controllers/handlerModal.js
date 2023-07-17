@@ -1,4 +1,4 @@
-export default (state, elements, watchedState) => {
+export default (state, elements, watcher) => {
   const { modal } = elements.modal;
   modal.addEventListener('show.bs.modal', (event) => {
     const button = event.relatedTarget;
@@ -11,7 +11,7 @@ export default (state, elements, watchedState) => {
     const liEl = button.offsetParent;
     const visitedLinkEl = liEl.querySelector('a');
 
-    const watcher = watchedState;
-    watcher.modalActive = { post, visitedLinkEl };
+    const watchedState = watcher;
+    watchedState.modalActive = { post, visitedLinkEl };
   });
 };

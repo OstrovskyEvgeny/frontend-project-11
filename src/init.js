@@ -1,5 +1,6 @@
 import i18next from 'i18next';
 import ru from './locales/ru.js';
+import watcherInit from './view/watcher.js';
 import runApp from './controllers/controller.js';
 
 export default () => {
@@ -14,24 +15,31 @@ export default () => {
     })
     .then(() => {
       const state = {
-        form: {
-          isValid: null,
+        flowAdditionProcess: {
+          state: 'filling', // sending, finished, failed
           error: '',
+          addedLinks: [],
         },
         content: {
           feeds: [],
           posts: [],
         },
-        links: [],
-        modalActive: null,
+        modalActive: {
+          post: {},
+          visitedLinkEl: {},
+        },
       };
+
       const elements = {
-        form: document.querySelector('.rss-form'),
-        feedback: document.querySelector('.feedback'),
-
-        feeds: document.querySelector('.feeds'),
-        posts: document.querySelector('.posts'),
-
+        form: {
+          formEl: document.querySelector('.rss-form'),
+          submitBtn: document.querySelector('.rss-form button'),
+          feedback: document.querySelector('.feedback'),
+        },
+        content: {
+          feeds: document.querySelector('.feeds'),
+          posts: document.querySelector('.posts'),
+        },
         modal: {
           modal: document.querySelector('#modal'),
           modalTitle: document.querySelector('.modal-title'),
@@ -40,7 +48,9 @@ export default () => {
         },
       };
 
-      runApp(i18n, state, elements);
+      const watcher = watcherInit(i18n, state, elements);
+
+      runApp(state, elements, watcher);
     })
-    .catch((e) => console.log(`init have a problem: ${e}`));
+    .catch((e) => console.log(`initialization problems: ${e}`));
 };

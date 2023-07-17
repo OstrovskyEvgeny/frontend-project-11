@@ -1,7 +1,7 @@
 import axios from 'axios';
 import parser from './parser.js';
 
-const newPostsCheck = (proxyUrl, state, watchedState) => {
+const newPostsCheck = (proxyUrl, state, watcher) => {
   axios.get(proxyUrl)
     .then((response) => {
       const { data } = response;
@@ -16,7 +16,7 @@ const newPostsCheck = (proxyUrl, state, watchedState) => {
         .filter(({ title }) => !state.content.posts.some((post) => post.title === title));
 
       if (newlyAddedPosts.length === 0) {
-        setTimeout(() => newPostsCheck(proxyUrl, state, watchedState), 5000);
+        setTimeout(() => newPostsCheck(proxyUrl, state, watcher), 5000);
         return;
       }
 
@@ -31,14 +31,14 @@ const newPostsCheck = (proxyUrl, state, watchedState) => {
         posts: [...state.content.posts, ...newlyAddedPosts].sort((a, b) => b.date - a.date),
       };
 
-      const watcher = watchedState;
-      watcher.content = content;
+      const watchedState = watcher;
+      watchedState.content = content;
 
       setTimeout(() => newPostsCheck(proxyUrl, state, watchedState), 5000);
     })
     .catch((e) => {
       console.log('Ошибка сети при обновлении постов', e);
-      newPostsCheck(proxyUrl, state, watchedState);
+      newPostsCheck(proxyUrl, state, watcher);
     });
 };
 
