@@ -31,7 +31,7 @@ export default (url, state, watcher) => {
       watchedState.flowAdditionProcess.error = '';
       watchedState.flowAdditionProcess.state = 'finished';
 
-      setTimeout(() => newPostsCheck(proxyUrl, state, watchedState), 5000);
+      setTimeout(() => newPostsCheck(proxyUrl, state, watcher), 5000);
     })
     .catch((error) => {
       if (error.message === 'the resource does not contain rss') {
